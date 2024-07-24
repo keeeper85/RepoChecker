@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GitHub Repository Search</title>
+</head>
+<body>
+<h1>GitHub Repository Search</h1>
+<form action="#" th:action="@{/search}" th:object="${search}" method="post">
+    <label for="username">GitHub Username:</label>
+    <input type="text" id="username" name="username" required>
+    <button type="submit">Search</button>
+</form>
+<div th:if="${error}">
+    <p th:text="${error}" style="color:red;"></p>
+</div>
+</body>
+</html>

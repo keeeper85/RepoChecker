@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/github")
-public class GitHubController {
+public class ApiController {
 
-    private static final Logger logger = LoggerFactory.getLogger(GitHubController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
     private final GitHubService gitHubService;
 
-    public GitHubController(GitHubService gitHubService) {
+    public ApiController(GitHubService gitHubService) {
         this.gitHubService = gitHubService;
     }
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GitHub Repository Search Results</title>
+</head>
+<body>
+<h1>Repositories of <span th:text="${username}"></span></h1>
+<div th:if="${repositories}">
+    <ul>
+        <li th:each="repo : ${repositories}">
+            <p><strong>Name:</strong> <span th:text="${repo.name}"></span></p>
+            <p><strong>Owner:</strong> <span th:text="${repo.owner}"></span></p>
+            <div th:if="${repo.branches}">
+                <p><strong>Branches:</strong></p>
+                <ul>
+                    <li th:each="branch : ${repo.branches}">
+                        <p><span th:text="${branch.name}"></span> - <span th:text="${branch.commitSha}"></span></p>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+<a href="/">Search again</a>
+</body>
+</html>
