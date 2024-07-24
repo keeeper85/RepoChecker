@@ -3,6 +3,7 @@ package eu.wswieciejutra.repo_checker.service;
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import repository.Branch;
 import repository.Repository;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,8 +25,13 @@ public class GitHubService {
     private final RestTemplate restTemplate;
     private final String githubApiUrl = "https://api.github.com";
 
+    @Autowired
     public GitHubService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
+    }
+
+    public GitHubService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public List<RepositoryDto> getNonForkRepositories(String username) throws UserNotFoundException {
@@ -52,22 +59,37 @@ public class GitHubService {
         RepositoryDto dto = new RepositoryDto();
         dto.setName(repository.getName());
         dto.setOwner(repository.getOwner().getLogin());
+        dto.setFork(repository.isFork());
+        List<BranchDto> branches = fetchBranchesForRepository(repository.getName());
+        dto.setBranches(branches);
 
-        String branchesUrl = githubApiUrl + "/repos/" + repository.getOwner().getLogin() + "/" + repository.getName() + "/branches";
-        ResponseEntity<Branch[]> branchesResponse = restTemplate.getForEntity(branchesUrl, Branch[].class);
-        Branch[] branches = branchesResponse.getBody();
+        return dto;
+    }
 
-        List<BranchDto> branchDtos = Arrays.stream(branches)
-                .map(branch -> {
-                    BranchDto branchDto = new BranchDto();
-                    branchDto.setName(branch.getName());
-                    branchDto.setLastCommitSha(branch.getCommit().getSha());
-                    return branchDto;
-                })
-                .collect(Collectors.toList());
+    private List<BranchDto> fetchBranchesForRepository(String repoName) {
+        String url = String.format("%s/repos/%s/branches", githubApiUrl, repoName);
+        ResponseEntity<Branch[]> response;
+        try {
+            response = restTemplate.getForEntity(url, Branch[].class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return Collections.emptyList();
+            } else {
+                throw e;
+            }
+        }
 
-        dto.setBranches(branchDtos);
+        Branch[] branches = response.getBody();
+        return (branches != null) ? Arrays.stream(branches)
+                .map(this::convertToBranchDto)
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+    }
 
+    private BranchDto convertToBranchDto(Branch branch) {
+        BranchDto dto = new BranchDto();
+        dto.setName(branch.getName());
+        dto.setLastCommitSha(branch.getCommit().getSha());
         return dto;
     }
 }

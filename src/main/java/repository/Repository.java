@@ -24,7 +24,5 @@ public class Repository {
     public static class Owner {
         private String login;}
 
-
-
 }
 
