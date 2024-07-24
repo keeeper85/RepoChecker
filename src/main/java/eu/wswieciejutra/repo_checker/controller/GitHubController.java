@@ -39,12 +39,12 @@ public class GitHubController {
                     "status", HttpStatus.NOT_FOUND.value(),
                     "message", "User not found"
             ));
-//        } catch (Exception e) {
-//            logger.error("An unexpected error occurred", e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-//                    "status", HttpStatus.INTERNAL_SERVER_ERROR.value(),
-//                    "message", "An unexpected error occurred"
-//            ));
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                    "status", HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "message", "An unexpected error occurred"
+            ));
         }
     }
 }
