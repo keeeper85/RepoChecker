@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="https://igoradamenko.com/awsm.css/v2/css/awsm.css">
     <title>Code Repository Search</title>
 </head>
 <body>
-<div class="container">
+<div class="form-container">
     <h1>Code Repository Search</h1>
-    <form action="#" th:action="@{/search}" th:object="${search}" method="post">
+    <form action="#" th:action="@{/search}" method="post">
         <label for="username">GitHub Username:</label>
         <input type="text" id="username" name="username" required>
+        <label for="token">GitHub Personal Access Token (optional):</label>
+        <input type="text" id="token" name="token">
         <button type="submit">Search</button>
     </form>
     <div th:if="${error}">

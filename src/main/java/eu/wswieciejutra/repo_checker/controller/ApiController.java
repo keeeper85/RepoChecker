@@ -5,10 +5,7 @@ import eu.wswieciejutra.repo_checker.service.GitHubService;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,10 +25,10 @@ public class ApiController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getRepositories(@PathVariable String username) {
+    public ResponseEntity<?> getRepositories(@PathVariable String username, @RequestParam(required = false) String token) {
         try {
             logger.info("Fetching repositories for user: {}", username);
-            List<RepositoryDto> repositories = gitHubService.getNonForkRepositories(username);
+            List<RepositoryDto> repositories = gitHubService.getNonForkRepositories(username, token);
             return ResponseEntity.ok(repositories);
         } catch (UserNotFoundException e) {
             logger.error("User not found: {}", username, e);
@@ -48,4 +45,3 @@ public class ApiController {
         }
     }
 }
-

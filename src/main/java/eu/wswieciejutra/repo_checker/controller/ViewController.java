@@ -27,9 +27,9 @@ public class ViewController {
     }
 
     @PostMapping("/search")
-    public String search(@RequestParam("username") String username, Model model) {
+    public String search(@RequestParam("username") String username, @RequestParam(name = "token", required = false) String token, Model model) {
         try {
-            List<RepositoryDto> repositories = gitHubService.getNonForkRepositories(username);
+            List<RepositoryDto> repositories = gitHubService.getNonForkRepositories(username, token);
             model.addAttribute("repositories", repositories);
             model.addAttribute("username", username);
             return "result";

@@ -4,19 +4,61 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
-    <link rel="stylesheet" href="https://igoradamenko.com/awsm.css/v2/css/awsm.css">
     <link rel="stylesheet" href="/css/styles.css">
     <title>GitHub Repository Search Results</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items to the start (top) */
+            min-height: 100vh; /* Ensure the body takes full viewport height */
+            margin: 0;
+            padding: 20px 0; /* Add padding to ensure some space at the top */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto; /* Center horizontally */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .repository {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .repository p {
+            margin: 0;
+        }
+
+        .branches {
+            margin-top: 10px;
+        }
+
+        .branches p {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <h1>Repositories of <span th:text="${username}"></span></h1>
     <div th:if="${repositories}">
-        <ul class="repo-list">
-            <li th:each="repo : ${repositories}" class="repo-item">
+        <ul>
+            <li th:each="repo : ${repositories}" class="repository">
                 <p><strong>Name:</strong> <span th:text="${repo.name}"></span></p>
                 <p><strong>Owner:</strong> <span th:text="${repo.owner}"></span></p>
-                <div th:if="${repo.branches}">
+                <div th:if="${repo.branches}" class="branches">
                     <p><strong>Branches:</strong></p>
                     <ul>
                         <li th:each="branch : ${repo.getBranches()}">
