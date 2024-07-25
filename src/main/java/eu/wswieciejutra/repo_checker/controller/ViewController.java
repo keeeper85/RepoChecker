@@ -37,7 +37,7 @@ public class ViewController {
             model.addAttribute("error", "User not found");
             return "index";
         } catch (Exception e) {
-            model.addAttribute("error", "An error occurred");
+            model.addAttribute("error", "An error occurred: " + e.getMessage());
             return "index";
         }
     }

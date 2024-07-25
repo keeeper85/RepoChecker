@@ -18,10 +18,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 @Service
 public class GitHubService {
 
+    private static final Logger logger = Logger.getLogger(GitHubService.class.getName());
     private final RestTemplate restTemplate;
     private final String githubApiUrl = "https://api.github.com";
 
@@ -42,6 +44,10 @@ public class GitHubService {
             ResponseEntity<Repository[]> response = restTemplate.getForEntity(url, Repository[].class);
             Repository[] repositories = response.getBody();
 
+            if (repositories == null) {
+                throw new UserNotFoundException("User not found");
+            }
+
             return Arrays.stream(repositories)
                     .filter(repo -> !repo.isFork())
                     .map(this::convertToDto)
@@ -60,14 +66,14 @@ public class GitHubService {
         dto.setName(repository.getName());
         dto.setOwner(repository.getOwner().getLogin());
         dto.setFork(repository.isFork());
-        List<BranchDto> branches = fetchBranchesForRepository(repository.getName());
+        List<BranchDto> branches = fetchBranchesForRepository(repository.getOwner().getLogin(), repository.getName());
         dto.setBranches(branches);
 
         return dto;
     }
 
-    private List<BranchDto> fetchBranchesForRepository(String repoName) {
-        String url = String.format("%s/repos/%s/branches", githubApiUrl, repoName);
+    private List<BranchDto> fetchBranchesForRepository(String owner, String repoName) {
+        String url = String.format("%s/repos/%s/%s/branches", githubApiUrl, owner, repoName);
         ResponseEntity<Branch[]> response;
         try {
             response = restTemplate.getForEntity(url, Branch[].class);
@@ -93,4 +99,3 @@ public class GitHubService {
         return dto;
     }
 }
-
