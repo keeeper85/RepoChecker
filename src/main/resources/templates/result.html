@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://igoradamenko.com/awsm.css/v2/css/awsm.css">
+    <link rel="stylesheet" href="/css/styles.css">
     <title>GitHub Repository Search Results</title>
 </head>
 <body>
-<h1>Repositories of <span th:text="${username}"></span></h1>
-<div th:if="${repositories}">
-    <ul>
-        <li th:each="repo : ${repositories}">
-            <p><strong>Name:</strong> <span th:text="${repo.name}"></span></p>
-            <p><strong>Owner:</strong> <span th:text="${repo.owner}"></span></p>
-            <div th:if="${repo.branches}">
-                <p><strong>Branches:</strong></p>
-                <ul>
-                    <li th:each="branch : ${repo.getBranches()}">
-                        <p><span th:text="${branch.getName()}"></span> - <span th:text="${branch.getLastCommitSha()}"></span></p>
-                    </li>
-                </ul>
-            </div>
-        </li>
-    </ul>
+<div class="container">
+    <h1>Repositories of <span th:text="${username}"></span></h1>
+    <div th:if="${repositories}">
+        <ul class="repo-list">
+            <li th:each="repo : ${repositories}" class="repo-item">
+                <p><strong>Name:</strong> <span th:text="${repo.name}"></span></p>
+                <p><strong>Owner:</strong> <span th:text="${repo.owner}"></span></p>
+                <div th:if="${repo.branches}">
+                    <p><strong>Branches:</strong></p>
+                    <ul>
+                        <li th:each="branch : ${repo.getBranches()}">
+                            <p><span th:text="${branch.getName()}"></span> - <span th:text="${branch.getLastCommitSha()}"></span></p>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <a href="/">Search again</a>
 </div>
-<a href="/">Search again</a>
 </body>
 </html>
