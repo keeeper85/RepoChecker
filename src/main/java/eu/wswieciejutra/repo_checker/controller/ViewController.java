@@ -1,7 +1,7 @@
 package eu.wswieciejutra.repo_checker.controller;
 
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
-import eu.wswieciejutra.repo_checker.service.GitHubService;
+import eu.wswieciejutra.repo_checker.service.Facade;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,19 @@ import java.util.List;
 @RestController
 public class ViewController {
 
-    private final GitHubService gitHubService;
+    private final Facade facade;
 
     @Autowired
-    public ViewController(GitHubService gitHubService) {
-        this.gitHubService = gitHubService;
+    public ViewController(Facade facade) {
+        this.facade = facade;
     }
 
     @PostMapping("/search")
-    public String search(@RequestParam("username") String username,
+    public String search(@RequestParam("service") String service,
+                         @RequestParam("username") String username,
                          @RequestParam(name = "token", required = false) String token) {
         try {
-            List<RepositoryDto> repositories = gitHubService.getNonForkRepositories(username, token);
+            List<RepositoryDto> repositories = facade.getNonForkRepositories(service, username, token);
             StringBuilder htmlResponse = new StringBuilder();
             htmlResponse.append("<div class=\"container\">");
             htmlResponse.append("<h1>Repositories of <span>").append(username).append("</span></h1>");

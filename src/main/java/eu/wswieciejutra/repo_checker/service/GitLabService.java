@@ -5,10 +5,7 @@ import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -22,24 +19,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GitHubService implements CodeRepositoryService{
+public class GitLabService implements CodeRepositoryService{
 
     private final RestTemplate restTemplate;
-    private final String apiUrl = Services.GITHUB.getApiUrl();
+    private final String apiUrl = Services.GITLAB.getApiUrl();
 
     @Autowired
-    public GitHubService(RestTemplateBuilder restTemplateBuilder) {
+    public GitLabService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public GitHubService(RestTemplate restTemplate) {
+    public GitLabService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
     public List<RepositoryDto> getNonForkRepositories(String username, String token) throws UserNotFoundException {
         String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .pathSegment("users", username, "repos")
+                .pathSegment("users", username, "projects")
                 .toUriString();
 
         HttpEntity<String> entity = Factory.createHttpEntity(token);
@@ -49,8 +46,7 @@ public class GitHubService implements CodeRepositoryService{
             Repository[] repositories = response.getBody();
 
             return Arrays.stream(repositories)
-                    .filter(repo -> !repo.isFork())
-                    .map(repo -> Factory.convertGitHubToDto(this, repo, token))
+                    .map(repo -> Factory.convertGitLabToDto(this, repo, token))
                     .collect(Collectors.toList());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -61,28 +57,20 @@ public class GitHubService implements CodeRepositoryService{
         }
     }
 
+    @Override
     public List<BranchDto> fetchBranchesForRepository(String owner, String repoName, String token) {
-        String url = String.format("%s/repos/%s/%s/branches", apiUrl, owner, repoName);
+        String url = String.format("%s/projects/%s/repository/branches", apiUrl, owner + "%2F" + repoName);
 
         HttpEntity<String> entity = Factory.createHttpEntity(token);
-
-        System.out.println("Fetching branches from URL: " + url);
-        if (token != null && !token.isEmpty()) {
-            System.out.println("Using token for authentication");
-        } else {
-            System.out.println("No token provided");
-        }
 
         ResponseEntity<Branch[]> response;
         try {
             response = restTemplate.exchange(url, HttpMethod.GET, entity, Branch[].class);
             if (response.getBody() == null) {
-                System.out.println("No branches found for repository: " + repoName);
                 return Collections.emptyList();
             }
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                System.out.println("Repository not found: " + repoName);
                 return Collections.emptyList();
             } else {
                 throw e;
@@ -90,13 +78,11 @@ public class GitHubService implements CodeRepositoryService{
         }
 
         Branch[] branches = response.getBody();
-        System.out.println("Fetched branches: " + Arrays.toString(branches));
 
         return (branches != null) ? Arrays.stream(branches)
                 .map(branch -> Factory.convertToBranchDto(branch))
                 .collect(Collectors.toList())
                 : Collections.emptyList();
     }
-
 
 }

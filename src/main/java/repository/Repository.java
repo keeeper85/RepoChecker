@@ -12,6 +12,9 @@ public class Repository {
 
     private String name;
 
+    @JsonProperty("path_with_namespace")
+    private String pathWithNamespace;
+
     @JsonProperty("owner")
     private Owner owner;
 

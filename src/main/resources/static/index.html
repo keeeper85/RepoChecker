@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Repository Search</title>
+    <title>Code Repository Search</title>
     <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,400i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://unpkg.com/htmx.org@1.7.0"></script>
@@ -15,22 +15,38 @@
         <form
                 hx-post="/search"
                 hx-target="#results"
-                hx-swap="outerHTML"
+                hx-swap="innerHTML"
+                hx-trigger="submit"
         >
-            <label for="username">GitHub Username:</label>
+            <label for="service">Select Service:</label>
+            <select id="service" name="service">
+                <option value="GITHUB">GitHub</option>
+                <option value="GITLAB">GitLab</option>
+            </select>
+            <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
-            <label for="token">GitHub Personal Access Token (optional*):</label>
+            <label for="token">Personal Access Token (optional*):</label>
             <input type="text" id="token" name="token">
             <button type="submit">Search</button>
+            <button type="button" id="clear-button">Clear</button>
         </form>
     </div>
     <div id="results" class="container">
         <h2>Welcome</h2>
-        <p>Enter a GitHub username to search for repositories.</p></br>
-        <p id="info">(*) GitHub API is limited to few requests per hour for unregistered users. To bypass this limit you can
+        <p>Enter a username to search for repositories.</p></br>
+        <p id="info">(*) API is limited to few requests per hour for unregistered users. To bypass this limit you can
             generate your own personal access token (Settings -> Developer settings -> Personal Access Tokens) and paste
             it here. This app isn't storing any tokens, but it's advised to use them with caution and delete when no needed anymore.</p>
     </div>
 </div>
+
+<script>
+    document.getElementById('clear-button').addEventListener('click', function() {
+        document.getElementById('service').value = 'GITHUB';
+        document.getElementById('username').value = '';
+        document.getElementById('token').value = '';
+    });
+</script>
+
 </body>
 </html>
