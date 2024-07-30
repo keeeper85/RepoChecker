@@ -1,7 +1,6 @@
-package repository;
+package eu.wswieciejutra.repo_checker.repository;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,35 +11,24 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Repository {
+public class Branch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-
-    @JsonProperty("path_with_namespace")
-    private String pathWithNamespace;
-
-    @JsonProperty("owner")
     @OneToOne
-    private Owner owner;
+    private Commit commit;
 
-    @JsonProperty("fork")
-    private boolean isFork;
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
     @Getter
     @Setter
     @Entity
+    @Table(name = "last_commit")
     @NoArgsConstructor
-    public static class Owner {
+    public static class Commit {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-        private String login;
-
+        private String sha;
     }
-
 }
-

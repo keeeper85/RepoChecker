@@ -5,8 +5,8 @@ import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import repository.Branch;
-import repository.Repository;
+import eu.wswieciejutra.repo_checker.repository.Branch;
+import eu.wswieciejutra.repo_checker.repository.Repository;
 
 import java.util.List;
 

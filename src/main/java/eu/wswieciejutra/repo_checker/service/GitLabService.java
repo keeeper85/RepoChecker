@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import repository.Branch;
-import repository.Repository;
+import eu.wswieciejutra.repo_checker.repository.Branch;
+import eu.wswieciejutra.repo_checker.repository.Repository;
 
 import java.util.Arrays;
 import java.util.Collections;
