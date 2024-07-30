@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+import java.util.Set;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
@@ -23,8 +26,11 @@ public class Repository {
     private String pathWithNamespace;
 
     @JsonProperty("owner")
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST) // Cascade persist to save owner along with repository
     private Owner owner;
+
+    @OneToMany(mappedBy = "repository", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Branch> branches;
 
     @JsonProperty("fork")
     private boolean isFork;
@@ -40,8 +46,25 @@ public class Repository {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         private String login;
-
     }
 
-}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Repository that = (Repository) o;
+        return Objects.equals(id, that.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Repository{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}

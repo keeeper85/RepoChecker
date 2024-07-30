@@ -14,21 +14,17 @@ public class Facade {
     private final Factory factory;
     private final SearchResultCachingService searchResultCachingService;
 
-
     public List<RepositoryDto> getNonForkRepositories(String service, String username, String token) throws UserNotFoundException {
 
-        if (searchResultCachingService.hasRepositoryBeenCached(username)) System.err.println("Cached!");
+        if (searchResultCachingService.hasRepositoryBeenCached(username)) {
+            return searchResultCachingService.getCachedRepositories(username)
+                    .stream()
+                    .map(repo -> Factory.convertCachedRepositoryToDto(repo, searchResultCachingService.getCachedBranches(repo)))
+                    .toList();
+        }
 
         Services serviceType = Services.valueOf(service.toUpperCase());
-
-        for (Services s : Services.values()) {
-            if (serviceType.equals(s)) {
-                List<RepositoryDto> repositories = factory.getService(s).getNonForkRepositories(username, token);
-                searchResultCachingService.cacheRepositories(repositories);
-                return repositories;
-            }
-        }
-        List<RepositoryDto> repositories = factory.getService(Services.GITHUB).getNonForkRepositories(username, token);
+        List<RepositoryDto> repositories = factory.getService(serviceType).getNonForkRepositories(username, token);
         searchResultCachingService.cacheRepositories(repositories);
         return repositories;
     }
