@@ -1,2 +1,4 @@
-package repository;public interface BranchInterface {
+package repository;
+
+public interface BranchInterface {
 }

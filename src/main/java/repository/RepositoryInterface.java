@@ -1,2 +1,4 @@
-package repository;public interface RepositoryInterface {
+package repository;
+
+public interface RepositoryInterface {
 }
