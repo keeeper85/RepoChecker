@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: repo-checker
   profiles:
     active: local
   datasource:

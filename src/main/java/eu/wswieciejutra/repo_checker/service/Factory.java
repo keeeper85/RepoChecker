@@ -50,18 +50,14 @@ public class Factory {
     }
 
     public static RepositoryDto convertGitHubToDto(CodeRepositoryService service, Repository repository, String token) {
-        RepositoryDto dto = new RepositoryDto();
-        dto.setName(repository.getName());
-        dto.setOwner(repository.getOwner().getLogin());
-        dto.setFork(repository.isFork());
+        RepositoryDto dto = prepareDto(repository);
         List<BranchDto> branches = service.fetchBranchesForRepository(repository.getOwner().getLogin(), repository.getName(), token);
         dto.setBranches(branches);
         return dto;
     }
 
     public static RepositoryDto convertGitLabToDto(CodeRepositoryService service, Repository repository, String token) {
-        RepositoryDto dto = new RepositoryDto();
-        dto.setName(repository.getName());
+        RepositoryDto dto = prepareDto(repository);
         dto.setOwner(repository.getPathWithNamespace().split("/")[0]);
         dto.setFork(false);
         List<BranchDto> branches = service.fetchBranchesForRepository(repository.getPathWithNamespace().split("/")[0], repository.getName(), token);
@@ -70,12 +66,17 @@ public class Factory {
     }
 
     public static RepositoryDto convertCachedRepositoryToDto(Repository repository, List<Branch> branches) {
+        RepositoryDto dto = prepareDto(repository);
+        List<BranchDto> branchesDto = branches.stream().map(Factory::convertToBranchDto).toList();
+        dto.setBranches(branchesDto);
+        return dto;
+    }
+
+    private static RepositoryDto prepareDto(Repository repository){
         RepositoryDto dto = new RepositoryDto();
         dto.setName(repository.getName());
         dto.setOwner(repository.getOwner().getLogin());
         dto.setFork(repository.isFork());
-        List<BranchDto> branchesDto = branches.stream().map(Factory::convertToBranchDto).toList();
-        dto.setBranches(branchesDto);
         return dto;
     }
 

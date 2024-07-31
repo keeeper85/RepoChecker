@@ -1,6 +1,7 @@
 package eu.wswieciejutra.repo_checker.service;
 
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
+import eu.wswieciejutra.repo_checker.repository.Repository;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import eu.wswieciejutra.repo_checker.repository.Branch;
-import eu.wswieciejutra.repo_checker.repository.Repository;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

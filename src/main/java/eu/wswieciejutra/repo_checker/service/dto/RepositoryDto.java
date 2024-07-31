@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,5 +17,14 @@ public class RepositoryDto {
     @JsonIgnore
     private boolean isFork;
     @JsonManagedReference
-    private List<BranchDto> branches;
+    private List<BranchDto> branches = new ArrayList<>();
+
+    public RepositoryDto() {
+    }
+
+    public RepositoryDto(String name, String owner, boolean isFork) {
+        this.name = name;
+        this.owner = owner;
+        this.isFork = isFork;
+    }
 }
