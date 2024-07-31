@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import repository.Branch
-import repository.Repository
+import eu.wswieciejutra.repo_checker.repository.Branch
+import eu.wswieciejutra.repo_checker.repository.Repository
 import spock.lang.Specification
 import spock.lang.Unroll
 

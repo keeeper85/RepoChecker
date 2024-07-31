@@ -40,8 +40,8 @@ public class ViewController {
                     htmlResponse.append("<ul>");
                     for (BranchDto branch : repo.getBranches()) {
                         htmlResponse.append("<li>");
-                        htmlResponse.append("<p><span>").append(branch.getName()).append("</span> - <span>")
-                                .append(branch.getLastCommitSha()).append("</span></p>");
+                        htmlResponse.append("<p><span>").append(branch.name()).append("</span> - <span>")
+                                .append(branch.lastCommitSha()).append("</span></p>");
                         htmlResponse.append("</li>");
                     }
                     htmlResponse.append("</ul>");
