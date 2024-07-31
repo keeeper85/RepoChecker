@@ -16,6 +16,7 @@ server:
   port: 8080
 
 repo-checker:
+  caching: true
   openapi:
     local-url: http://localhost:8080
     prod-url: http://localhost:8080
