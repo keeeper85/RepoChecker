@@ -3,6 +3,8 @@ package eu.wswieciejutra.repo_checker.controller;
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
 import eu.wswieciejutra.repo_checker.service.Facade;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/github")
+@Tag(name = "Api Controller", description = "Search for GitHub users in text mode")
 public class ApiController {
 
     private final Facade facade;
@@ -20,6 +23,7 @@ public class ApiController {
         this.facade = facade;
     }
 
+    @Operation(description = "Get the GitHub user's repositories as JSON objects")
     @GetMapping("/{username}")
     public ResponseEntity<?> getRepositories(@PathVariable String username,
                                              @RequestParam(required = false) String token,

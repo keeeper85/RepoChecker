@@ -4,12 +4,15 @@ import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
 import eu.wswieciejutra.repo_checker.service.Facade;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Tag(name = "View Controller", description = "Search for GitHub/GitLab users with GUI (used by HTML/HTMX View files)")
 public class ViewController {
 
     private final Facade facade;
@@ -19,6 +22,8 @@ public class ViewController {
         this.facade = facade;
     }
 
+
+    @Operation(description = "Get HTML-preformatted list of user's repositories")
     @PostMapping("/search")
     public String search(@RequestParam("service") String service,
                          @RequestParam("username") String username,
