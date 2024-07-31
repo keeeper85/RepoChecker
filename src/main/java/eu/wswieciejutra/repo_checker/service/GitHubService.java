@@ -19,6 +19,7 @@ import eu.wswieciejutra.repo_checker.repository.Repository;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,39 +64,7 @@ public class GitHubService implements CodeRepositoryService{
 
     public List<BranchDto> fetchBranchesForRepository(String owner, String repoName, String token) {
         String url = String.format("%s/repos/%s/%s/branches", apiUrl, owner, repoName);
-
-        HttpEntity<String> entity = Factory.createHttpEntity(token);
-
-        System.out.println("Fetching branches from URL: " + url);
-        if (token != null && !token.isEmpty()) {
-            System.out.println("Using token for authentication");
-        } else {
-            System.out.println("No token provided");
-        }
-
-        ResponseEntity<Branch[]> response;
-        try {
-            response = restTemplate.exchange(url, HttpMethod.GET, entity, Branch[].class);
-            if (response.getBody() == null) {
-                System.out.println("No branches found for repository: " + repoName);
-                return Collections.emptyList();
-            }
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                System.out.println("Repository not found: " + repoName);
-                return Collections.emptyList();
-            } else {
-                throw e;
-            }
-        }
-
-        Branch[] branches = response.getBody();
-        System.out.println("Fetched branches: " + Arrays.toString(branches));
-
-        return (branches != null) ? Arrays.stream(branches)
-                .map(branch -> Factory.convertToBranchDto(branch))
-                .collect(Collectors.toList())
-                : Collections.emptyList();
+        return ServiceHelper.getBranches(restTemplate, url, token);
     }
 
 

@@ -29,10 +29,10 @@ public class Factory {
 
     public static Branch fromBranchDto(BranchDto branchDto, Repository repository) {
         Branch.Commit commit = new Branch.Commit();
-        commit.setSha(branchDto.getLastCommitSha());
+        commit.setSha(branchDto.lastCommitSha());
 
         Branch branch = new Branch();
-        branch.setName(branchDto.getName());
+        branch.setName(branchDto.name());
         branch.setCommit(commit);
         branch.setRepository(repository);
         return branch;
@@ -80,10 +80,7 @@ public class Factory {
     }
 
     public static BranchDto convertToBranchDto(Branch branch) {
-        BranchDto dto = new BranchDto();
-        dto.setName(branch.getName());
-        dto.setLastCommitSha(branch.getCommit().getSha());
-        return dto;
+        return new BranchDto(branch.getName(), branch.getCommit().getSha());
     }
 
     public static HttpEntity<String> createHttpEntity(String token) {

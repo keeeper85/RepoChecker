@@ -5,5 +5,4 @@ import java.util.List;
 public interface BranchInterface {
 
     List<Branch> findAllBranchesByRepository(Repository repository);
-    Branch save(Branch branch);
 }

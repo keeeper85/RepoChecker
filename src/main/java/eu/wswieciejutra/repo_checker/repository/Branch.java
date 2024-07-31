@@ -52,10 +52,4 @@ public class Branch {
         return Objects.hash(id, name, repository);
     }
 
-    @Override
-    public String toString() {
-        return "Branch{" +
-                "name='" + name + '\'' +
-                '}';
-    }
 }

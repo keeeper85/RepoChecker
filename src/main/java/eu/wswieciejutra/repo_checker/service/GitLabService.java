@@ -1,20 +1,21 @@
 package eu.wswieciejutra.repo_checker.service;
 
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
+import eu.wswieciejutra.repo_checker.repository.Repository;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import eu.wswieciejutra.repo_checker.repository.Branch;
-import eu.wswieciejutra.repo_checker.repository.Repository;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,29 +61,6 @@ public class GitLabService implements CodeRepositoryService{
     @Override
     public List<BranchDto> fetchBranchesForRepository(String owner, String repoName, String token) {
         String url = String.format("%s/projects/%s/repository/branches", apiUrl, owner + "%2F" + repoName);
-
-        HttpEntity<String> entity = Factory.createHttpEntity(token);
-
-        ResponseEntity<Branch[]> response;
-        try {
-            response = restTemplate.exchange(url, HttpMethod.GET, entity, Branch[].class);
-            if (response.getBody() == null) {
-                return Collections.emptyList();
-            }
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                return Collections.emptyList();
-            } else {
-                throw e;
-            }
-        }
-
-        Branch[] branches = response.getBody();
-
-        return (branches != null) ? Arrays.stream(branches)
-                .map(branch -> Factory.convertToBranchDto(branch))
-                .collect(Collectors.toList())
-                : Collections.emptyList();
+        return ServiceHelper.getBranches(restTemplate, url, token);
     }
-
 }

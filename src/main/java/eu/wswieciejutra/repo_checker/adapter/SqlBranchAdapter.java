@@ -13,5 +13,4 @@ public interface SqlBranchAdapter extends BranchInterface, JpaRepository<Branch,
 
     @Query("SELECT b FROM Branch b WHERE b.repository = :repository")
     List<Branch> findAllBranchesByRepository(@Param("repository") Repository repository);
-    Branch save(Branch branch);
 }
