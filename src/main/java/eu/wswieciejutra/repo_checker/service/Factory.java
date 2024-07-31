@@ -12,6 +12,7 @@ import eu.wswieciejutra.repo_checker.repository.Repository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -20,23 +21,20 @@ public class Factory {
     private final GitHubService gitHubService;
     private final GitLabService gitLabService;
 
-    // Convert List of BranchDto to Set of Branch entities
     public static Set<Branch> fromBranchesDto(List<BranchDto> branchesDto, Repository repository) {
-        Set<Branch> branches = new HashSet<>();
-        for (BranchDto branchDto : branchesDto) {
-            branches.add(fromBranchDto(branchDto, repository));
-        }
-        return branches;
+        return branchesDto.stream()
+                .map(branchDto -> fromBranchDto(branchDto, repository))
+                .collect(Collectors.toUnmodifiableSet());
     }
 
-    // Convert BranchDto to Branch entity
     public static Branch fromBranchDto(BranchDto branchDto, Repository repository) {
         Branch.Commit commit = new Branch.Commit();
         commit.setSha(branchDto.getLastCommitSha());
+
         Branch branch = new Branch();
         branch.setName(branchDto.getName());
         branch.setCommit(commit);
-        branch.setRepository(repository); // Ensure branch is linked to repository
+        branch.setRepository(repository);
         return branch;
     }
 
@@ -51,7 +49,6 @@ public class Factory {
         }
     }
 
-    // Convert Repository entity to RepositoryDto for GitHub
     public static RepositoryDto convertGitHubToDto(CodeRepositoryService service, Repository repository, String token) {
         RepositoryDto dto = new RepositoryDto();
         dto.setName(repository.getName());
@@ -62,7 +59,6 @@ public class Factory {
         return dto;
     }
 
-    // Convert Repository entity to RepositoryDto for GitLab
     public static RepositoryDto convertGitLabToDto(CodeRepositoryService service, Repository repository, String token) {
         RepositoryDto dto = new RepositoryDto();
         dto.setName(repository.getName());
@@ -73,7 +69,6 @@ public class Factory {
         return dto;
     }
 
-    // Convert cached Repository entity to RepositoryDto
     public static RepositoryDto convertCachedRepositoryToDto(Repository repository, List<Branch> branches) {
         RepositoryDto dto = new RepositoryDto();
         dto.setName(repository.getName());
@@ -84,7 +79,6 @@ public class Factory {
         return dto;
     }
 
-    // Convert Branch entity to BranchDto
     public static BranchDto convertToBranchDto(Branch branch) {
         BranchDto dto = new BranchDto();
         dto.setName(branch.getName());

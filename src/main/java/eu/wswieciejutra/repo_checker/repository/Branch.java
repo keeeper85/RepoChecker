@@ -35,6 +35,8 @@ public class Branch {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         private String sha;
+        @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+        private Branch branch;
     }
 
     @Override
@@ -42,12 +44,12 @@ public class Branch {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Branch branch = (Branch) o;
-        return Objects.equals(id, branch.id);
+        return Objects.equals(id, branch.id) && Objects.equals(name, branch.name) && Objects.equals(repository, branch.repository);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(id, name, repository);
     }
 
     @Override

@@ -4,7 +4,6 @@ import eu.wswieciejutra.repo_checker.repository.Branch;
 import eu.wswieciejutra.repo_checker.repository.BranchInterface;
 import eu.wswieciejutra.repo_checker.repository.Repository;
 import eu.wswieciejutra.repo_checker.repository.RepositoryInterface;
-import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,12 @@ public class SearchResultCachingService {
     private final BranchInterface branchInterface;
 
     public void cacheRepositories(List<RepositoryDto> repositories) {
-        String username = repositories.get(0).getOwner();
+        String username = repositories.getFirst().getOwner();
         if (repositoryInterface.existsByOwnerLogin(username)) return;
 
         Repository.Owner owner = new Repository.Owner();
         owner.setLogin(username);
+        repositoryInterface.save(owner);
 
         for (RepositoryDto dto : repositories) {
             Repository repository = new Repository();
@@ -33,9 +33,7 @@ public class SearchResultCachingService {
             repository.setOwner(owner);
 
             Set<Branch> branches = Factory.fromBranchesDto(dto.getBranches(), repository);
-            repository.setBranches(branches);
-
-            // Save repository along with branches
+            repository.addBranches(branches);
             repositoryInterface.save(repository);
         }
     }
@@ -45,16 +43,10 @@ public class SearchResultCachingService {
     }
 
     public List<Repository> getCachedRepositories(String username) {
-        List<Repository> repos = repositoryInterface.findAllByOwnerLogin(username);
-        System.err.println("Getting repositories");
-        repos.forEach(System.out::println);
-        return repos;
+        return repositoryInterface.findAllByOwnerLogin(username);
     }
 
     public List<Branch> getCachedBranches(Repository repository) {
-        List<Branch> branches = branchInterface.findAllBranchesByRepository(repository);
-        System.err.println("Getting branches");
-        branches.forEach(System.out::println);
-        return branches;
+        return branchInterface.findAllBranchesByRepository(repository);
     }
 }
