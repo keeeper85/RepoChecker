@@ -1,5 +1,6 @@
 package eu.wswieciejutra.repo_checker.service;
 
+import eu.wswieciejutra.repo_checker.exception.ApiLimitReachedException;
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class Facade {
         this.caching = caching;
     }
 
-    public List<RepositoryDto> getNonForkRepositories(String service, String username, String token) throws UserNotFoundException {
+    public List<RepositoryDto> getNonForkRepositories(String service, String username, String token) throws UserNotFoundException, ApiLimitReachedException {
 
         if (caching && searchResultCachingService.hasRepositoryBeenCached(username)) {
             return searchResultCachingService.getCachedRepositories(username)

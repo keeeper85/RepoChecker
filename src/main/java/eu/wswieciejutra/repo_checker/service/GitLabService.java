@@ -1,6 +1,7 @@
 package eu.wswieciejutra.repo_checker.service;
 
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
+import eu.wswieciejutra.repo_checker.logging.LoggerUtility;
 import eu.wswieciejutra.repo_checker.repository.Repository;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
@@ -45,6 +46,10 @@ public class GitLabService implements CodeRepositoryService{
         try {
             ResponseEntity<Repository[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Repository[].class);
             Repository[] repositories = response.getBody();
+            if (repositories == null || repositories.length == 0) {
+                LoggerUtility.LOGGER.info("No repositories found");
+                return List.of();
+            }
 
             return Arrays.stream(repositories)
                     .map(repo -> Factory.convertGitLabToDto(this, repo, token))

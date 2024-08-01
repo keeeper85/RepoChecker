@@ -1,5 +1,6 @@
 package eu.wswieciejutra.repo_checker.service;
 
+import eu.wswieciejutra.repo_checker.logging.LoggerUtility;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,7 @@ public class Factory {
             case GITLAB:
                 return gitLabService;
             default:
+                LoggerUtility.LOGGER.error("Service not implemented yet");
                 throw new IllegalArgumentException("Unknown service: " + service);
         }
     }

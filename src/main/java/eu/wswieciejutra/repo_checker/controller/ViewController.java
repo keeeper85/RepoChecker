@@ -1,6 +1,7 @@
 package eu.wswieciejutra.repo_checker.controller;
 
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
+import eu.wswieciejutra.repo_checker.logging.LoggerUtility;
 import eu.wswieciejutra.repo_checker.service.Facade;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
@@ -57,9 +58,10 @@ public class ViewController {
             htmlResponse.append("</ul>");
             htmlResponse.append("</div>");
             htmlResponse.append("</div>");
+            LoggerUtility.LOGGER.info("GUI used for user: {}", username);
             return htmlResponse.toString();
         } catch (UserNotFoundException e) {
-            return "<div id=\"error\" style=\"color:red;\">User not found</div>";
+            return "<div id=\"error\" style=\"color:red;\">" + e.getMessage() + "</div>";
         } catch (Exception e) {
             return "<div id=\"error\" style=\"color:red;\">An error occurred: " + e.getMessage() + "</div>";
         }

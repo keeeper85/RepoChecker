@@ -1,5 +1,6 @@
 package eu.wswieciejutra.repo_checker.service;
 
+import eu.wswieciejutra.repo_checker.logging.LoggerUtility;
 import eu.wswieciejutra.repo_checker.repository.Branch;
 import eu.wswieciejutra.repo_checker.repository.BranchInterface;
 import eu.wswieciejutra.repo_checker.repository.Repository;
@@ -37,6 +38,7 @@ public class SearchResultCachingService {
             repository.addBranches(branches);
             repositoryInterface.save(repository);
         }
+        LoggerUtility.LOGGER.info("Repositories cached for {}", username);
     }
 
     public boolean hasRepositoryBeenCached(String username) {
@@ -44,6 +46,7 @@ public class SearchResultCachingService {
     }
 
     public List<Repository> getCachedRepositories(String username) {
+        LoggerUtility.LOGGER.info("Repositories retrieved from cache for {}", username);
         return repositoryInterface.findAllByOwnerLogin(username);
     }
 

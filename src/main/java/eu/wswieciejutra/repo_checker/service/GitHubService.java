@@ -1,6 +1,8 @@
 package eu.wswieciejutra.repo_checker.service;
 
+import eu.wswieciejutra.repo_checker.exception.ApiLimitReachedException;
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
+import eu.wswieciejutra.repo_checker.logging.LoggerUtility;
 import eu.wswieciejutra.repo_checker.repository.Repository;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
@@ -35,7 +37,7 @@ public class GitHubService implements CodeRepositoryService{
     }
 
     @Override
-    public List<RepositoryDto> getNonForkRepositories(String username, String token) throws UserNotFoundException {
+    public List<RepositoryDto> getNonForkRepositories(String username, String token) throws UserNotFoundException, ApiLimitReachedException {
         String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
                 .pathSegment("users", username, "repos")
                 .toUriString();
@@ -46,7 +48,7 @@ public class GitHubService implements CodeRepositoryService{
             ResponseEntity<Repository[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Repository[].class);
             Repository[] repositories = response.getBody();
             if (repositories == null || repositories.length == 0) {
-                System.out.println("Null repos");
+                LoggerUtility.LOGGER.info("No repositories found");
                 return List.of();
             }
 
@@ -57,6 +59,9 @@ public class GitHubService implements CodeRepositoryService{
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new UserNotFoundException("User not found");
+            }
+            else if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
+                throw new ApiLimitReachedException("Api limit reached" + e.getMessage());
             }
             else {
                 throw e;
