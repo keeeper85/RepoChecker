@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="SearchResultCachingServiceSpec" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-07-31T17:40:00" hostname="DESKTOP-UTHLDEN" time="0.089">
+  <properties/>
+  <testcase name="should cache repositories and branches" classname="SearchResultCachingServiceSpec" time="0.039"/>
+  <testcase name="should check if repository has been cached" classname="SearchResultCachingServiceSpec" time="0.024"/>
+  <testcase name="should return cached repositories" classname="SearchResultCachingServiceSpec" time="0.018"/>
+  <testcase name="should return cached branches for a repository" classname="SearchResultCachingServiceSpec" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

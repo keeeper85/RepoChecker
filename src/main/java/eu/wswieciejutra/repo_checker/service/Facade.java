@@ -30,7 +30,7 @@ public class Facade {
                     .toList();
         }
 
-        Services serviceType = Services.valueOf(service.toUpperCase());
+        Services serviceType = service == null ? Services.valueOf(service.toUpperCase()) : Services.GITHUB;
         List<RepositoryDto> repositories = factory.getService(serviceType).getNonForkRepositories(username, token);
         if(caching) searchResultCachingService.cacheRepositories(repositories);
         return repositories;

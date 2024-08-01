@@ -1,5 +1,6 @@
 package eu.wswieciejutra.repo_checker.service;
 
+import eu.wswieciejutra.repo_checker.logging.LoggerUtility;
 import eu.wswieciejutra.repo_checker.repository.Branch;
 import eu.wswieciejutra.repo_checker.service.dto.BranchDto;
 import org.springframework.http.HttpEntity;
@@ -19,9 +20,9 @@ public class ServiceHelper {
 
     public static void tokenCheckLogging(String token) {
         if (token != null && !token.isEmpty()) {
-            System.out.println("Using token for authentication");
+            LoggerUtility.LOGGER.error("Using token for authentication");
         } else {
-            System.out.println("No token provided");
+            LoggerUtility.LOGGER.error("No token provided");
         }
     }
 

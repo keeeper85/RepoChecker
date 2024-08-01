@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: repo-checker
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+server:
+  port: 8080
+
+repo-checker:
+  caching: true
+  openapi:
+    local-url: http://localhost:8080
+    prod-url: http://localhost:8080

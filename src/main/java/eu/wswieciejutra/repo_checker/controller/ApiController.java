@@ -2,6 +2,7 @@ package eu.wswieciejutra.repo_checker.controller;
 
 import eu.wswieciejutra.repo_checker.exception.UserNotFoundException;
 import eu.wswieciejutra.repo_checker.service.Facade;
+import eu.wswieciejutra.repo_checker.service.Services;
 import eu.wswieciejutra.repo_checker.service.dto.RepositoryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,10 +27,9 @@ public class ApiController {
     @Operation(description = "Get the GitHub user's repositories as JSON objects")
     @GetMapping("/{username}")
     public ResponseEntity<?> getRepositories(@PathVariable String username,
-                                             @RequestParam(required = false) String token,
-                                             @RequestParam(name = "service", required = false) String service) {
+                                             @RequestParam(required = false) String token) {
         try {
-            List<RepositoryDto> repositories = facade.getNonForkRepositories(service, username, token);
+            List<RepositoryDto> repositories = facade.getNonForkRepositories("GITHUB", username, token);
             return ResponseEntity.ok(repositories);
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
@@ -39,7 +39,7 @@ public class ApiController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
                     "status", HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    "message", "An unexpected error occurred"
+                    "message", "An unexpected error occurred" + e.getMessage()
             ));
         }
     }
