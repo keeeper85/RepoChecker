@@ -45,6 +45,10 @@ public class GitHubService implements CodeRepositoryService{
         try {
             ResponseEntity<Repository[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Repository[].class);
             Repository[] repositories = response.getBody();
+            if (repositories == null || repositories.length == 0) {
+                System.out.println("Null repos");
+                return List.of();
+            }
 
             return Arrays.stream(repositories)
                     .filter(repo -> !repo.isFork())
@@ -53,7 +57,8 @@ public class GitHubService implements CodeRepositoryService{
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new UserNotFoundException("User not found");
-            } else {
+            }
+            else {
                 throw e;
             }
         }

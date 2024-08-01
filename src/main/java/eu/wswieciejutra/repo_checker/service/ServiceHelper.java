@@ -20,9 +20,9 @@ public class ServiceHelper {
 
     public static void tokenCheckLogging(String token) {
         if (token != null && !token.isEmpty()) {
-            LoggerUtility.LOGGER.error("Using token for authentication");
+            LoggerUtility.LOGGER.info("Using token for authentication");
         } else {
-            LoggerUtility.LOGGER.error("No token provided");
+            LoggerUtility.LOGGER.info("No token provided");
         }
     }
 

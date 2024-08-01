@@ -19,6 +19,7 @@ public class SearchResultCachingService {
     private final BranchInterface branchInterface;
 
     public void cacheRepositories(List<RepositoryDto> repositories) {
+        if (repositories.isEmpty()) {return;}
         String username = repositories.getFirst().getOwner();
         if (repositoryInterface.existsByOwnerLogin(username)) return;
 
