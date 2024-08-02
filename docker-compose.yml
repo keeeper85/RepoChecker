@@ -1,0 +1,8 @@
+name: keeeper85
+
+services:
+  repo-checker:
+#    build: .
+    image: keeeper85/repo-checker
+    ports:
+      - "80:8080"
