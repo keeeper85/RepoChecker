@@ -1,1 +1,6 @@
 rootProject.name = 'repo-checker'
+
+include 'monolith'
+include 'domain'
+include 'app'
+include 'adapter'

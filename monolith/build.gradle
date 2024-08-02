@@ -1,0 +1,17 @@
+dependencies {
+    implementation project(':adapter')
+    implementation project(':app')
+    implementation project(':domain')
+}
+
+bootJar {
+    enabled = true
+}
+
+tasks.jar {
+    enabled = false
+}
+
+task prepareKotlinBuildScriptModel {
+
+}

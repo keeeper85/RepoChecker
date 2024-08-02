@@ -1,0 +1,8 @@
+dependencies {
+    implementation project(':app')
+    implementation project(':domain')
+}
+
+task prepareKotlinBuildScriptModel {
+
+}
