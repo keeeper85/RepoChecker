@@ -36,7 +36,7 @@ This project follows a Hexagonal Architecture and is divided into four modules:
 - Spring Data + H2 (in memory)
 - Docker, Docker Compose
 - Tested with Spock
-- Front with HTML, CSS, HTMX
+- Front: SPA made with HTML, CSS, HTMX
 
 ## API Endpoints
 
