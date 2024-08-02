@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/github")
 @Tag(name = "Api Controller", description = "Search for GitHub users in text mode")
-class ApiController {
+public class ApiController {
 
     private final Facade facade;
 

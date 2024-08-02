@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 interface SqlRepositoryAdapter extends RepositoryInterface, JpaRepository<Repository, Long> {
 
     @Query("SELECT r FROM Repository r WHERE r.owner.login = :login")

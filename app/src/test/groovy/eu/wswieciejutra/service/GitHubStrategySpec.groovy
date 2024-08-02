@@ -1,10 +1,14 @@
-package eu.wswieciejutra
+package eu.wswieciejutra.service
 
-import eu.wswieciejutra.service.GitHubStrategy
+import eu.wswieciejutra.Branch
+import eu.wswieciejutra.Repository
+import eu.wswieciejutra.exception.UserNotFoundException
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -57,6 +61,6 @@ class GitHubStrategySpec extends Specification {
         gitHubService.getNonForkRepositories(username, token)
 
         then:
-        thrown(UserNotFoundException)
+        thrown(UserNotFoundException.class)
     }
 }
