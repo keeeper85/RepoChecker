@@ -1,49 +1,62 @@
 plugins {
-	id 'java'
-	id 'groovy'
 	id 'org.springframework.boot' version '3.2.8'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'eu.wswieciejutra'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+	group = 'eu.wswieciejutra'
+	version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+	repositories {
+		mavenCentral()
 	}
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'groovy'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
 	}
-}
 
-repositories {
-	mavenCentral()
-}
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
+	}
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
-	implementation 'ch.qos.logback:logback-classic:1.5.6'
-	implementation 'ch.qos.logback:logback-core:1.5.6'
-	implementation 'org.slf4j:slf4j-api:2.0.13'
-	runtimeOnly 'com.h2database:h2'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+	repositories {
+		mavenCentral()
+	}
 
-	testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0'
-	testImplementation 'org.spockframework:spock-spring:2.4-M4-groovy-4.0'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
+		implementation 'ch.qos.logback:logback-classic:1.5.6'
+		implementation 'ch.qos.logback:logback-core:1.5.6'
+		implementation 'org.slf4j:slf4j-api:2.0.13'
+		runtimeOnly 'com.h2database:h2'
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
 
+		testImplementation 'org.spockframework:spock-core:2.4-M4-groovy-4.0'
+		testImplementation 'org.spockframework:spock-spring:2.4-M4-groovy-4.0'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	}
 
+	bootJar {
+		enabled = false
+	}
 
-tasks.named('test') {
-	useJUnitPlatform()
+	test {
+		useJUnitPlatform()
+	}
 }

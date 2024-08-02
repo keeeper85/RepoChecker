@@ -36,3 +36,10 @@ out/
 
 ### Logging ###
 /logs/
+
+### Gradle ###
+/adapter/build/
+/app/build/
+/domain/build/
+/monolith/build/
+
