@@ -2,23 +2,15 @@ package eu.wswieciejutra;
 
 import eu.wswieciejutra.dto.BranchDto;
 import eu.wswieciejutra.dto.RepositoryDto;
-import eu.wswieciejutra.strategy.GitHubStrategy;
-import eu.wswieciejutra.strategy.GitLabStrategy;
-import lombok.RequiredArgsConstructor;
+import eu.wswieciejutra.service.ServiceStrategyInterface;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
 public class Factory {
-
-    private final GitHubStrategy gitHubStrategy;
-    private final GitLabStrategy gitLabStrategy;
 
     public static Set<Branch> fromBranchesDto(List<BranchDto> branchesDto, Repository repository) {
         return branchesDto.stream()
@@ -26,7 +18,7 @@ public class Factory {
                 .collect(Collectors.toUnmodifiableSet());
     }
 
-    public static Branch fromBranchDto(BranchDto branchDto, Repository repository) {
+    static Branch fromBranchDto(BranchDto branchDto, Repository repository) {
         Branch.Commit commit = new Branch.Commit();
         commit.setSha(branchDto.lastCommitSha());
 
@@ -37,26 +29,15 @@ public class Factory {
         return branch;
     }
 
-    public CodeRepositoryService getService(Services service) {
-        switch (service) {
-            case GITHUB:
-                return gitHubStrategy;
-            case GITLAB:
-                return gitLabStrategy;
-            default:
-                LoggerUtility.LOGGER.error("Service not implemented yet");
-                throw new IllegalArgumentException("Unknown service: " + service);
-        }
-    }
-
-    public static RepositoryDto convertGitHubToDto(CodeRepositoryService service, Repository repository, String token) {
+    public static RepositoryDto convertGitHubToDto(ServiceStrategyInterface service, Repository repository, String token) {
         RepositoryDto dto = prepareDto(repository);
+        dto.setOwner(repository.getOwner().getLogin());
         List<BranchDto> branches = service.fetchBranchesForRepository(repository.getOwner().getLogin(), repository.getName(), token);
         dto.setBranches(branches);
         return dto;
     }
 
-    public static RepositoryDto convertGitLabToDto(CodeRepositoryService service, Repository repository, String token) {
+    public static RepositoryDto convertGitLabToDto(ServiceStrategyInterface service, Repository repository, String token) {
         RepositoryDto dto = prepareDto(repository);
         dto.setOwner(repository.getPathWithNamespace().split("/")[0]);
         dto.setFork(false);
@@ -67,6 +48,7 @@ public class Factory {
 
     public static RepositoryDto convertCachedRepositoryToDto(Repository repository, List<Branch> branches) {
         RepositoryDto dto = prepareDto(repository);
+        dto.setOwner(repository.getOwner().getLogin());
         List<BranchDto> branchesDto = branches.stream().map(Factory::convertToBranchDto).toList();
         dto.setBranches(branchesDto);
         return dto;
@@ -75,7 +57,6 @@ public class Factory {
     private static RepositoryDto prepareDto(Repository repository){
         RepositoryDto dto = new RepositoryDto();
         dto.setName(repository.getName());
-        dto.setOwner(repository.getOwner().getLogin());
         dto.setFork(repository.isFork());
         return dto;
     }

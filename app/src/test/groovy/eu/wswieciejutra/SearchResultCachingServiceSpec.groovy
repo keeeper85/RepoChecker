@@ -2,6 +2,7 @@ package eu.wswieciejutra
 
 import eu.wswieciejutra.dto.BranchDto
 import eu.wswieciejutra.dto.RepositoryDto
+import eu.wswieciejutra.service.SearchResultCachingService
 import spock.lang.Specification
 import spock.lang.Unroll
 

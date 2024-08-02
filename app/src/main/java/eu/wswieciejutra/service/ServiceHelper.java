@@ -1,10 +1,15 @@
-package eu.wswieciejutra;
+package eu.wswieciejutra.service;
 
+import eu.wswieciejutra.Branch;
+import eu.wswieciejutra.Factory;
+import eu.wswieciejutra.LoggerUtility;
 import eu.wswieciejutra.dto.BranchDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,7 +19,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Component
+@RequiredArgsConstructor
 public class ServiceHelper {
+
+    private final GitHubStrategy gitHubStrategy;
+    private final GitLabStrategy gitLabStrategy;
+
+    public ServiceStrategyInterface getService(Services service) {
+        switch (service) {
+            case GITHUB:
+                return gitHubStrategy;
+            case GITLAB:
+                return gitLabStrategy;
+            default:
+                LoggerUtility.LOGGER.error("Service not implemented yet");
+                throw new IllegalArgumentException("Unknown service: " + service);
+        }
+    }
 
     public static void tokenCheckLogging(String token) {
         if (token != null && !token.isEmpty()) {

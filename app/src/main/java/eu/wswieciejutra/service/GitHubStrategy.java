@@ -1,8 +1,9 @@
-package eu.wswieciejutra.strategy;
+package eu.wswieciejutra.service;
 
 import eu.wswieciejutra.*;
 import eu.wswieciejutra.dto.BranchDto;
 import eu.wswieciejutra.dto.RepositoryDto;
+import eu.wswieciejutra.exception.ApiLimitReachedException;
 import eu.wswieciejutra.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -20,24 +21,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GitLabStrategy implements CodeRepositoryService {
+class GitHubStrategy implements ServiceStrategyInterface {
 
     private final RestTemplate restTemplate;
-    private final String apiUrl = Services.GITLAB.getApiUrl();
+    private final String apiUrl = Services.GITHUB.getApiUrl();
 
     @Autowired
-    public GitLabStrategy(RestTemplateBuilder restTemplateBuilder) {
+    GitHubStrategy(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public GitLabStrategy(RestTemplate restTemplate) {
+    GitHubStrategy(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public List<RepositoryDto> getNonForkRepositories(String username, String token) throws UserNotFoundException {
+    public List<RepositoryDto> getNonForkRepositories(String username, String token) throws UserNotFoundException, ApiLimitReachedException {
         String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .pathSegment("users", username, "projects")
+                .pathSegment("users", username, "repos")
                 .toUriString();
 
         HttpEntity<String> entity = Factory.createHttpEntity(token);
@@ -51,20 +52,26 @@ public class GitLabStrategy implements CodeRepositoryService {
             }
 
             return Arrays.stream(repositories)
-                    .map(repo -> Factory.convertGitLabToDto(this, repo, token))
+                    .filter(repo -> !repo.isFork())
+                    .map(repo -> Factory.convertGitHubToDto(this, repo, token))
                     .collect(Collectors.toList());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new UserNotFoundException("User not found");
-            } else {
+                throw new UserNotFoundException("User not found: " + e.getMessage());
+            }
+            else if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
+                throw new ApiLimitReachedException("Api limit reached" + e.getMessage());
+            }
+            else {
                 throw e;
             }
         }
     }
 
-    @Override
     public List<BranchDto> fetchBranchesForRepository(String owner, String repoName, String token) {
-        String url = String.format("%s/projects/%s/repository/branches", apiUrl, owner + "%2F" + repoName);
+        String url = String.format("%s/repos/%s/%s/branches", apiUrl, owner, repoName);
         return ServiceHelper.getBranches(restTemplate, url, token);
     }
+
+
 }

@@ -14,19 +14,19 @@ import java.util.List;
 
 @RestController
 @Tag(name = "View Controller", description = "Search for GitHub/GitLab users with GUI (used by HTML/HTMX View files)")
-public class ViewController {
+class ViewController {
 
     private final Facade facade;
 
     @Autowired
-    public ViewController(Facade facade) {
+    ViewController(Facade facade) {
         this.facade = facade;
     }
 
 
     @Operation(description = "Get HTML-preformatted list of user's repositories")
     @PostMapping("/search")
-    public String search(@RequestParam("service") String service,
+    String search(@RequestParam("service") String service,
                          @RequestParam("username") String username,
                          @RequestParam(name = "token", required = false) String token) {
         try {

@@ -9,12 +9,12 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class SearchResultCachingService {
+class SearchResultCachingService {
 
     private final RepositoryInterface repositoryInterface;
     private final BranchInterface branchInterface;
 
-    public void cacheRepositories(List<RepositoryDto> repositories) {
+    void cacheRepositories(List<RepositoryDto> repositories) {
         if (repositories.isEmpty()) {return;}
         String username = repositories.getFirst().getOwner();
         if (repositoryInterface.existsByOwnerLogin(username)) return;
@@ -36,16 +36,16 @@ public class SearchResultCachingService {
         LoggerUtility.LOGGER.info("Repositories cached for {}", username);
     }
 
-    public boolean hasRepositoryBeenCached(String username) {
+    boolean hasRepositoryBeenCached(String username) {
         return repositoryInterface.existsByOwnerLogin(username);
     }
 
-    public List<Repository> getCachedRepositories(String username) {
+    List<Repository> getCachedRepositories(String username) {
         LoggerUtility.LOGGER.info("Repositories retrieved from cache for {}", username);
         return repositoryInterface.findAllByOwnerLogin(username);
     }
 
-    public List<Branch> getCachedBranches(Repository repository) {
+    List<Branch> getCachedBranches(Repository repository) {
         return branchInterface.findAllBranchesByRepository(repository);
     }
 }

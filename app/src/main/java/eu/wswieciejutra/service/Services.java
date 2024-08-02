@@ -1,4 +1,4 @@
-package eu.wswieciejutra;
+package eu.wswieciejutra.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

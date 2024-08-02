@@ -1,6 +1,6 @@
 package eu.wswieciejutra
 
-import eu.wswieciejutra.strategy.GitHubStrategy
+import eu.wswieciejutra.service.GitHubStrategy
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpClientErrorException

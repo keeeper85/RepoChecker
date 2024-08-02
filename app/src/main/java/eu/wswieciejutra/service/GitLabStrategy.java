@@ -1,4 +1,4 @@
-package eu.wswieciejutra.strategy;
+package eu.wswieciejutra.service;
 
 import eu.wswieciejutra.*;
 import eu.wswieciejutra.dto.BranchDto;
@@ -21,24 +21,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GitHubStrategy implements CodeRepositoryService {
+class GitLabStrategy implements ServiceStrategyInterface {
 
     private final RestTemplate restTemplate;
-    private final String apiUrl = Services.GITHUB.getApiUrl();
+    private final String apiUrl = Services.GITLAB.getApiUrl();
 
     @Autowired
-    public GitHubStrategy(RestTemplateBuilder restTemplateBuilder) {
+    GitLabStrategy(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public GitHubStrategy(RestTemplate restTemplate) {
+    GitLabStrategy(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
     public List<RepositoryDto> getNonForkRepositories(String username, String token) throws UserNotFoundException, ApiLimitReachedException {
         String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .pathSegment("users", username, "repos")
+                .pathSegment("users", username, "projects")
                 .toUriString();
 
         HttpEntity<String> entity = Factory.createHttpEntity(token);
@@ -52,8 +52,7 @@ public class GitHubStrategy implements CodeRepositoryService {
             }
 
             return Arrays.stream(repositories)
-                    .filter(repo -> !repo.isFork())
-                    .map(repo -> Factory.convertGitHubToDto(this, repo, token))
+                    .map(repo -> Factory.convertGitLabToDto(this, repo, token))
                     .collect(Collectors.toList());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -68,10 +67,9 @@ public class GitHubStrategy implements CodeRepositoryService {
         }
     }
 
+    @Override
     public List<BranchDto> fetchBranchesForRepository(String owner, String repoName, String token) {
-        String url = String.format("%s/repos/%s/%s/branches", apiUrl, owner, repoName);
+        String url = String.format("%s/projects/%s/repository/branches", apiUrl, owner + "%2F" + repoName);
         return ServiceHelper.getBranches(restTemplate, url, token);
     }
-
-
 }

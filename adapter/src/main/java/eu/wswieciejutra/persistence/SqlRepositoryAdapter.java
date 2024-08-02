@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface SqlRepositoryAdapter extends RepositoryInterface, JpaRepository<Repository, Long> {
+interface SqlRepositoryAdapter extends RepositoryInterface, JpaRepository<Repository, Long> {
 
     @Query("SELECT r FROM Repository r WHERE r.owner.login = :login")
     List<Repository> findAllByOwnerLogin(@Param("login") String login);
