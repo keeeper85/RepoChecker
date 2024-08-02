@@ -2,7 +2,7 @@ spring:
   application:
     name: repo-checker
   profiles:
-    active: local
+    active: prod
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -19,4 +19,4 @@ repo-checker:
   caching: true
   openapi:
     local-url: http://localhost:8080
-    prod-url: http://localhost:8080
+    prod-url: http://13.60.35.202:8080

@@ -1,50 +1,76 @@
 # RepoChecker
-This project provides an API to list all non-fork GitHub repositories for a given user, including information on each branch and its last commit SHA. If the user does not exist, it returns a 404 response with a specified format.
 
+RepoChecker is a Spring Boot application designed to search for GitHub users and their repositories. It provides endpoints to fetch repositories and supports both caching and error handling for user-friendly responses.
 
-## Technologies Used
+## Table of Contents
 
-- Java 21
-- Gradle 8.7 (Groovy)
-- Spring Boot 3.28
-- GitHub REST API
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech](#tech)
+- [API Endpoints](#api-endpoints)
+- [Logging](#logging)
+- [Running Tests](#running-tests)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Prerequisites
+## Features
 
-- JDK 21
-- Gradle 8.7
-- Internet connection to access GitHub API
+- Fetch GitHub/GitLab repositories for a given user.
+- Handles errors with custom error messages.
+- Caching support for improved performance.
+- Uses personal access tokens for free api limitation bypass
+- Dockerized for easy deployment.
 
-## Setup
+## Architecture
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/keeeper85/RepoChecker.git
-    cd RepoChecker
-    ```
+This project follows a Hexagonal Architecture and is divided into four modules:
+- `monolith`
+- `domain`
+- `app`
+- `adapter`
 
-2. Build the project:
-    ```sh
-    ./gradlew build
-    ```
+## Tech
 
-3. Run the application:
-    ```sh
-    ./gradlew bootRun
-    ```
+- Java 21, Gradle 8.8, Spring Boot 3.2.8
+- Spring Data + H2 (in memory)
+- Docker, Docker Compose
+- Tested with Spock
+- Front with HTML, CSS, HTMX
 
-## Usage
+## API Endpoints
 
-### Get Non-Fork Repositories
+ApiController serves an endpoint at `/api/github/{user}` with user as Spring path variable. Works only with GitHub,
+optionally accepts tokens to bypass request limitations for anonymous users. Returns JSON objects.
 
-- **Endpoint**: `/api/github/{username}/repositories`
-- **Method**: GET
-- **Headers**: `Accept: application/json`
+ViewController serves an endpoint at `/search` and returns chunks of HTML code for HTMX framework to display. 
+Works with GitHub and GitLab, accepts tokens.
 
-#### Request
+API endpoints are exposed with Swagger at `/swagger-ui/index.html`
 
-```http
-GET /api/github/{username}/repositories HTTP/1.1
-Host: localhost:8080
-Accept: application/json
+## Logging
+
+The application uses Logback for logging. By default, logs are printed to the console. To change the logging configuration, modify the logback.xml file.
+
+## Running Tests
+
+Run the unit tests using Gradle:
+
+`./gradlew test`
+
+Unit tests are written in Groovy with Spock, integration tests use JUnit.
+
+## Deployment
+
+App is currently deployed at AWS EC2 instance with Docker and available at:
+
+`http://ec2-13-60-35-202.eu-north-1.compute.amazonaws.com:8080` (or http://tinyurl.com/repo-checker)
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License.
 
