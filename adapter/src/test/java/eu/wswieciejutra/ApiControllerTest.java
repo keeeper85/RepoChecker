@@ -1,5 +1,6 @@
 package eu.wswieciejutra;
 
+import eu.wswieciejutra.controller.ApiController;
 import eu.wswieciejutra.dto.RepositoryDto;
 import eu.wswieciejutra.exception.UserNotFoundException;
 import org.junit.jupiter.api.Test;

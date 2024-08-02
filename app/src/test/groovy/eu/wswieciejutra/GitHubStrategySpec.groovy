@@ -1,5 +1,6 @@
 package eu.wswieciejutra
 
+import eu.wswieciejutra.strategy.GitHubStrategy
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpClientErrorException
@@ -7,10 +8,10 @@ import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class GitHubServiceSpec extends Specification {
+class GitHubStrategySpec extends Specification {
 
     RestTemplate restTemplate = Mock(RestTemplate)
-    GitHubService gitHubService = new GitHubService(restTemplate)
+    GitHubStrategy gitHubService = new GitHubStrategy(restTemplate)
 
     @Unroll
     def "should return non-fork repositories"() {

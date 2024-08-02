@@ -1,5 +1,6 @@
-package eu.wswieciejutra;
+package eu.wswieciejutra.controller;
 
+import eu.wswieciejutra.LoggerUtility;
 import eu.wswieciejutra.exception.ApiLimitReachedException;
 import eu.wswieciejutra.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;

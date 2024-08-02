@@ -1,5 +1,6 @@
-package eu.wswieciejutra;
+package eu.wswieciejutra.strategy;
 
+import eu.wswieciejutra.*;
 import eu.wswieciejutra.dto.BranchDto;
 import eu.wswieciejutra.dto.RepositoryDto;
 import eu.wswieciejutra.exception.UserNotFoundException;
@@ -19,17 +20,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GitLabService implements CodeRepositoryService{
+public class GitLabStrategy implements CodeRepositoryService {
 
     private final RestTemplate restTemplate;
     private final String apiUrl = Services.GITLAB.getApiUrl();
 
     @Autowired
-    public GitLabService(RestTemplateBuilder restTemplateBuilder) {
+    public GitLabStrategy(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public GitLabService(RestTemplate restTemplate) {
+    public GitLabStrategy(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

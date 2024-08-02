@@ -1,5 +1,7 @@
-package eu.wswieciejutra;
+package eu.wswieciejutra.persistence;
 
+import eu.wswieciejutra.Repository;
+import eu.wswieciejutra.RepositoryInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

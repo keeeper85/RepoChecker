@@ -2,6 +2,8 @@ package eu.wswieciejutra;
 
 import eu.wswieciejutra.dto.BranchDto;
 import eu.wswieciejutra.dto.RepositoryDto;
+import eu.wswieciejutra.strategy.GitHubStrategy;
+import eu.wswieciejutra.strategy.GitLabStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,8 +17,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Factory {
 
-    private final GitHubService gitHubService;
-    private final GitLabService gitLabService;
+    private final GitHubStrategy gitHubStrategy;
+    private final GitLabStrategy gitLabStrategy;
 
     public static Set<Branch> fromBranchesDto(List<BranchDto> branchesDto, Repository repository) {
         return branchesDto.stream()
@@ -38,9 +40,9 @@ public class Factory {
     public CodeRepositoryService getService(Services service) {
         switch (service) {
             case GITHUB:
-                return gitHubService;
+                return gitHubStrategy;
             case GITLAB:
-                return gitLabService;
+                return gitLabStrategy;
             default:
                 LoggerUtility.LOGGER.error("Service not implemented yet");
                 throw new IllegalArgumentException("Unknown service: " + service);

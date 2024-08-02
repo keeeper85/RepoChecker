@@ -1,5 +1,6 @@
-package eu.wswieciejutra;
+package eu.wswieciejutra.strategy;
 
+import eu.wswieciejutra.*;
 import eu.wswieciejutra.dto.BranchDto;
 import eu.wswieciejutra.dto.RepositoryDto;
 import eu.wswieciejutra.exception.ApiLimitReachedException;
@@ -20,17 +21,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GitHubService implements CodeRepositoryService{
+public class GitHubStrategy implements CodeRepositoryService {
 
     private final RestTemplate restTemplate;
     private final String apiUrl = Services.GITHUB.getApiUrl();
 
     @Autowired
-    public GitHubService(RestTemplateBuilder restTemplateBuilder) {
+    public GitHubStrategy(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public GitHubService(RestTemplate restTemplate) {
+    public GitHubStrategy(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
